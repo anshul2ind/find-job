@@ -1,3 +1,12 @@
 spring:
   application:
     name: find-job
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sb-ecom
+    username: admin
+    password: password123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true

@@ -1,29 +1,32 @@
 package com.project.findjob.job.impl;
 
 import com.project.findjob.job.Job;
+import com.project.findjob.job.JobRepository;
 import com.project.findjob.job.JobService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class JobServiceImpl implements JobService {
-    List<Job> jobs = new ArrayList<>();
+
+    private final JobRepository jobRepository;
 
     private Job findJobById(Long id) {
-        return jobs.stream().filter(job -> job.getId().equals(id)).findFirst().orElseGet(() -> null);
-
+        return jobRepository.findById(id).orElseGet(() -> null);
     }
 
     @Override
     public List<Job> findAll() {
-        return jobs;
+        return jobRepository.findAll();
     }
 
     @Override
     public String createJob(Job job) {
-        jobs.add(job);
+        job.setId(null);
+        jobRepository.save(job);
         return "Job added successfully";
     }
 
@@ -33,13 +36,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job deleteJobById(Long id) {
-
-        Job jobToDelete =  findJobById(id);
-        if(jobToDelete != null) {
-            jobs.remove(jobToDelete);
+    public boolean deleteJobById(Long id) {
+        try {
+            jobRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return jobToDelete;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class JobServiceImpl implements JobService {
             job.setLocation(updateJob.getLocation());
             job.setMinSalary(updateJob.getMinSalary());
             job.setMaxSalary(updateJob.getMaxSalary());
+            jobRepository.save(job);
             return true;
         }
 
