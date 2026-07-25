@@ -3,8 +3,6 @@ package com.project.findjob.job.impl;
 import com.project.findjob.job.Job;
 import com.project.findjob.job.JobService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public String createJob(@RequestBody Job job) {
+    public String createJob(Job job) {
         jobs.add(job);
         return "Job added successfully";
     }
@@ -45,13 +43,17 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job updateJobById(Long id, Job updateJob) {
-        Job deletedJob = deleteJobById(id);
-        if(deletedJob != null) {
-            updateJob.setId(deletedJob.getId());
-            jobs.add(updateJob);
+    public boolean updateJobById(Long id, Job updateJob) {
+        Job job = findJobById(id);
+        if(job != null) {
+            job.setTitle(updateJob.getTitle());
+            job.setDescription(updateJob.getDescription());
+            job.setLocation(updateJob.getLocation());
+            job.setMinSalary(updateJob.getMinSalary());
+            job.setMaxSalary(updateJob.getMaxSalary());
+            return true;
         }
 
-        return updateJob;
+        return false;
     }
 }
