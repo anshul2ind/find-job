@@ -13,6 +13,11 @@ import java.util.List;
 public class JobServiceImpl implements JobService {
     List<Job> jobs = new ArrayList<>();
 
+    private Job findJobById(Long id) {
+        return jobs.stream().filter(job -> job.getId().equals(id)).findFirst().orElseGet(() -> null);
+
+    }
+
     @Override
     public List<Job> findAll() {
         return jobs;
@@ -26,16 +31,27 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job getJobById(Long id) {
-        return jobs.stream().filter(job -> job.getId().equals(id)).findFirst().orElseGet(() -> null);
+        return findJobById(id);
     }
 
     @Override
     public Job deleteJobById(Long id) {
 
-        Job jobToDelete =  jobs.stream().filter(job -> job.getId().equals(id)).findFirst().orElseGet(() -> null);
+        Job jobToDelete =  findJobById(id);
         if(jobToDelete != null) {
             jobs.remove(jobToDelete);
         }
         return jobToDelete;
+    }
+
+    @Override
+    public Job updateJobById(Long id, Job updateJob) {
+        Job deletedJob = deleteJobById(id);
+        if(deletedJob != null) {
+            updateJob.setId(deletedJob.getId());
+            jobs.add(updateJob);
+        }
+
+        return updateJob;
     }
 }

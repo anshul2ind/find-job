@@ -7,4 +7,5 @@ public interface JobService {
     public String createJob(Job job);
     public Job getJobById(Long id);
     public Job deleteJobById(Long id);
+    public Job updateJobById(Long id, Job updateJob);
 }
